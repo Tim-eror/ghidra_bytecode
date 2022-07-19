@@ -118,7 +118,7 @@ class Node (object):
             elif string[pos] == SEP: # beim seperator wird das fertige kind den kindknoten hinzugefügt
                 if child is not None:
                     child = Node(text)
-                children.append(child)
+                self.children.append(child)
                 child = None
                 text = ""
             else:
