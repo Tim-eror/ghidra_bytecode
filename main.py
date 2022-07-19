@@ -12,9 +12,12 @@ def mokup():
     b.insert("fel*x","6")
     b.insert("felix123","7")
     b.insert("fefufumm","8")
-    b.show()
-    print(b.search("fefufum"))
-    #b.impord(ex)
+    dump = b.dump()
+    print("tree dumped\n")
+    print(dump)
+    b2 = Baum.pmud(dump)
+    print("\n\n\ntree parsed\n")
+
 
 def main():
     b = Baum()
@@ -30,4 +33,5 @@ def main():
     b.show()
 
 if __name__ == "__main__":
-    main()
+    # main()
+    mokup()
