@@ -1,6 +1,10 @@
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
+BEGIN_CHILD_BODY = "{"
+END_CHILD_BODY = "}"
+SEP = ","
+
 class Node (object):
     def __init__(self, val: str, children=None, data=None):
         self.val = val
@@ -91,35 +95,43 @@ class Node (object):
         print(_indent("}", indentation))
 
     
-    def export(self) -> str:
+    def dump(self) -> str:
         if len(self.children) == 0:
             return self.val;
         else:
-            out = self.val[:] + "{"
+            out = self.val[:] + BEGIN_CHILD_BODY
             for c in self.children:
-                out += c.export() + ","
-            out = out[:-1] + "}"
+                out += c.dump() + SEP
+            out = out[:] + END_CHILD_BODY
             return out
 
-    @classmethod
-    def impord(self, text: str):
-        name = ""
-        for c in text:
-            match c:
-                case "{":
-                    self.impord()
-                case "}":
-                    self.children.append(name)
-                    return
-                case ",":
-                    self.children.append(name)
-                    name = ""
+    def parseFrom(self, string: str, pos=1):
+        # read inside curly braces, create children, pass inner curly braces off to them
+        text = ""
+        child = None
+        while pos < len(string):
+            if string[pos] == BEGIN_CHILD_BODY: # das lesen von inneren klammern wird an kinder abgeschoben
+                child = Node(text)
+                pos = child.parseFrom(string, pos+1)
+            elif string[pos] == END_CHILD_BODY: # das kind endet hier. der elternknoten muss sich um den rest kümmern
+                return pos
+            elif string[pos] == SEP: # beim seperator wird das fertige kind den kindknoten hinzugefügt
+                if child is not None:
+                    child = Node(text)
+                children.append(child)
+                child = None
+                text = ""
+            else:
+                text += string[pos]
+            pos += 1
+        raise UserWarning("dein string ist kaputt oder so. geht auf jeden fall nicht")
 
-        
 
+# { child1{ . . . }, child2{ . . . }, child3{ . . . } }
 
 def _indent(text, indentation):
     return "  "*indentation + text
+
 
 class Baum(Node):
     def __init__(self, val="", children=None):
@@ -133,4 +145,11 @@ class Baum(Node):
     def insert(self, val, data):
         if not self._pass_to_child(val,data):
             self.children.append(Node(val, data=data))
+
+    @classmethod
+    def pmud(string: str):
+        root = Baum();
+        endPos = root.parseFrom(string)
+        assert endPos == len(string) - 1
+        return root;
 
