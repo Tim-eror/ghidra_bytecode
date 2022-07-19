@@ -7,7 +7,7 @@ def dump_raw_bcode(func):
 	addrSet = func.getBody()
     	codeUnits = listing.getCodeUnits(addrSet, True) # true means 'forward'
 	for codeUnit in codeUnits:
-		str = str + "{}\n".format(hexlify(codeUnit.getBytes()))
+		str = str + "{}".format(hexlify(codeUnit.getBytes()))
 	return str
 
 
@@ -18,7 +18,7 @@ if func is None:
 	println("No Function at address " + str(currentAddress))
 	exit(1)
 
-path = "/home/felix/ghidra_scripts/bytecode_dump/bin_dump_"+currentProgram.getName()+"_"+func.getName()
+path = "/home/felix/ghidra_scripts/bytecode_dump/"+currentProgram.getName()+"_"+func.getName()+".bin"
 
 with open(path, "w") as out_f:
 	out_f.write(dump_raw_bcode(func))
