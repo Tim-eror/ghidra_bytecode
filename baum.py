@@ -147,7 +147,7 @@ class Baum(Node):
             self.children.append(Node(val, data=data))
 
     @classmethod
-    def pmud(string: str):
+    def pmud(cls, string: str):
         root = Baum();
         endPos = root.parseFrom(string)
         assert endPos == len(string) - 1
