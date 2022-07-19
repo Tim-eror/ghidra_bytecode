@@ -106,18 +106,24 @@ class Node (object):
             return out
 
     def parseFrom(self, string: str, pos=1):
+        logging.debug("Entering function")
         # read inside curly braces, create children, pass inner curly braces off to them
         text = ""
         child = None
         while pos < len(string):
+            logging.debug(string)
+            logging.debug(" "*pos + "^")
+            logging.debug(f"text: {text}")
             if string[pos] == BEGIN_CHILD_BODY: # das lesen von inneren klammern wird an kinder abgeschoben
                 child = Node(text)
                 pos = child.parseFrom(string, pos+1)
             elif string[pos] == END_CHILD_BODY: # das kind endet hier. der elternknoten muss sich um den rest kümmern
+                logging.debug("Exiting function")
                 return pos
             elif string[pos] == SEP: # beim seperator wird das fertige kind den kindknoten hinzugefügt
-                if child is not None:
+                if child is None:
                     child = Node(text)
+                logging.debug(f"adding child {child.val} to {self.val}.")
                 self.children.append(child)
                 child = None
                 text = ""
