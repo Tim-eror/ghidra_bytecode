@@ -17,7 +17,7 @@ def mokup():
     print(dump)
     b2 = Baum.pmud(dump)
     print("\n\n\ntree parsed\n")
-    print(b2)
+    print(b2.dump())
 
 
 def main():
